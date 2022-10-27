@@ -1,0 +1,125 @@
+const express = require('express')
+const pg = require('pg')
+const Pool = pg.Pool
+const app = express()
+const cors = require('cors')
+
+// Configurasi Database
+
+const pool = new Pool({
+    user: 'postgres',
+    host: 'localhost',
+    database: 'User',
+    password: '12345678',
+    port: 5432,
+    connectionTimeMillis: 2000,
+    max: 100
+  })
+
+const port = 3000
+
+
+
+app.use(cors())
+app.use(express.urlencoded({extended:true}))
+
+
+
+app.json
+
+
+app.get('/users', async (req, res) => {
+    try {
+        const query = `select * from "Member" m ;`
+        const data = await pool.query(query)
+        res.status(200).json(data.rows)
+    } catch (error) {
+        res.status(400).json({message : "Something wrong"})
+    }
+
+})
+
+app.get('/user/:id', async (req,res) => {
+    try {
+        const id = req.params.id
+        const query = `select * from "Member" m where m."ID" = '${id}';`
+        const data = await pool.query(query)
+        res.status(200).json(data.rows[0])
+    } catch (error) {
+        res.status(404).json({message : "Data not found"})
+    }
+
+})
+
+app.delete('/users/:id',async (req,res) => {
+  try {
+    const id = req.params.id
+    const query = `DELETE FROM public."Member"
+    WHERE "ID"='${id}';
+    `
+    const data =await pool.query(query)
+    if(data.rowCount > 0) {
+        res.status(200).json({msg : "Success delete"})
+    }else if(data.rowCount === 0) {
+        res.status(404).json({msg : "Data not found"})
+    }
+    console.log(data)
+  } catch (error) {
+    res.status(400).json({msg : "error"})
+  }
+})
+
+app.post("/users",async  (req,res) => {
+    try {
+        const name = req.body.name
+        const age = req.body.age
+        const _class = req.body.class
+        const query = `INSERT INTO public."Member"
+        ("ID", "Name", "Age", "Created_at", "Updated_at", "Class")
+        VALUES(gen_random_uuid(), '${name}', ${age}, now(), now(), '${_class}'::text) returning * ;
+        `
+
+        const data = await pool.query(query)
+        res.status(200).json(data.rows[0])
+    } catch (error) {
+        res.status(400).json({message : "error"})
+    }
+})
+
+
+
+app.listen(port, () => {
+  console.log(`Example app listening on port ${port}`)
+})
+
+
+/**
+komunikasi antar server itu disebut API => Application Program Interface
+cara bicara antar program, atau antar server
+
+BE -> FE , API
+
+API berbeda tergantung alamat API => ROUTES
+didalam Satu IP : www.google.com => localhost :127.0.0.1
+port => kaya laci dari sebuah IP 
+
+gabungan antara IP:port dan ROUTES itu alamat lengkap dari API
+
+
+localohost:3000/home => ROUTES
+
+
+satu entitas API bukan hanya routes tapi ditentukan juga sama method, yg disebut http Method:
+    - GET       =>  Memberikan data ke user
+    - POST      =>  User mengirimkan data ke server, server menerima data untuk disimpan ke database, dan mengembalikan data yang dibutuhkan
+    - PUT       => User memberikan data ke server beserta id dari data yang ingin di edit. 
+    - DELETE    => Untuk menghapus data
+
+COBA BUAT 4 API dengan Method yang berbeda tapi routes sama, dimana method PUT dan DELETE menerima Params ID kemudian kirimkan kembali id yang di pakai ke user. kemudian pada method POST menerima data dari user : { name , age, address} , kemudian kirimkan kembali ke user. 
+
+
+
+body : {name : 'hafis' , age : 22}
+respon :  {name : 'hafis' , age : 22}
+
+ */
