@@ -3,6 +3,7 @@ const pg = require('pg')
 const Pool = pg.Pool
 const app = express()
 const cors = require('cors')
+app.use(cors())
 
 const pool = new Pool({
     user: 'postgres',
@@ -16,7 +17,6 @@ const pool = new Pool({
 
 const port = 3000
 
-app.use(cors())
 app.use(express.urlencoded({extended:true}))
 
 app.json
@@ -28,15 +28,15 @@ app.get('/values', async (req, res) => {
         const query = `SELECT "ID", "Created_at", "Update_at", "Name", "Count", "Kind"
         FROM public."Groceries";`
         const data = await pool.query(query)
-        res.status(200).json(data.rows);
+        res.status(200).json({Data: data.rows, length: data.rowCount});
     } catch (error) {
         res.status(400).json({message : "Bad Request"})
     }
 })
-app.get('/value/:id', async(req, res) => {
+app.get('/value/:name', async(req, res) => {
     try {
-        const id = req.params.id
-        const query = `select * from "Groceries" g  where g."ID"  = '${id}' ;`
+        const nama = req.params.name
+        const query = `select * from "Groceries" g  where g."Name"  = '${nama}' ;`
         const data = await pool.query(query)
         res.status(200).json(data.rows[0])
     } catch (error) {
@@ -61,11 +61,11 @@ app.post('/value', async(req, res) => {
     }
 })
 
-app.delete('/value/:id', async(req, res) => {
+app.delete('/value/:name', async(req, res) => {
     try {
-        const id = req.params.id
+        const nama = req.params.name
         const query = `DELETE FROM public."Groceries"
-        WHERE "ID"='${id}';`
+        WHERE "Name"='${nama}';`
         const data = await pool.query(query)
         if (data.rowCount === 1){
             res.status(200).json({message: "Success Delete"})

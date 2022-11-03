@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Input Output</title>
+    <link rel="stylesheet" href="desain.css">
+</head>
+<body>
+    <!-- buat tampilan dengan ti ga fitur Input Data, Display All Data, dan Display data by name -->
+    <header>
+        <h2>Data</h2>
+        <div id="buttonContainer">
+            <button id="inputButton"><h3>Input Data</h3></button>
+            <button id="deleteButton"><h3>Delete Data</h3></button>
+            <button id="displayButton"><h3>Display All</h3></button>
+            <button id="displayDataButton"><h3>Display Data</h3></button>
+        </div>
+    </header>
+
+    <div id="containerInput">
+        <div id="input1">
+            <label for="name">Name :</label>
+            <input type="text" id="name">
+        </div>   
+        <div id="input2">
+            <label for="count">Count:</label>
+            <input type="text" id="count">
+        </div>     
+        <div id="input3">
+            <label for="kind">Kind :</label>
+            <input type="text" id="kind">
+        </div>
+        <button id="hint">Input</button>
+    </div>
+    <div id="containerDelete">
+        <input type="text" id="deleteName" placeholder="input name data delete">
+        <Button id="delete">Delete</Button>
+        <p id="deleteData"></p>
+    </div>
+    <div id="containerDisplay">
+        <button id="refresh">Refresh</button>
+        <div id="display">
+
+        </div>       
+        <!-- <p>hello</p> -->
+    </div>
+    <div id="containerDisplayData"> 
+        <input type="text" id="nama" placeholder="input Name">
+        <Button id="search">Search</Button>
+        <p id="OneData"></p>
+    </div>
+
+
+    
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="backEnd.js"></script>
+</html>
